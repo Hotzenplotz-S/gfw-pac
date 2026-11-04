@@ -1,0 +1,34 @@
+name: Sync Upstream
+
+# 作用：让本 fork 的 master 自动跟上游 zhiyi7/gfw-pac 保持同步，
+# 同时保证 gfw.pac 与生成脚本里的代理端口始终是 127.0.0.1:7890。
+# 合并/端口逻辑都在 scripts/sync-upstream.sh 里，方便本地复现调试。
+on:
+  schedule:
+    # 每天 UTC 02:40（北京时间 10:40）检查一次上游
+    - cron: '40 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+env:
+  UPSTREAM_REPO: https://github.com/zhiyi7/gfw-pac.git
+  UPSTREAM_BRANCH: master
+  LOCAL_PROXY: 127.0.0.1:7890
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync upstream and keep local port
+        run: bash scripts/sync-upstream.sh
