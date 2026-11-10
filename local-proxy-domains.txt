@@ -1,0 +1,8 @@
+# 本地额外强制走代理的域名（每行一个，# 开头为注释）
+# 每次同步上游后由 scripts/sync-upstream.sh 并入 gfw.pac 的 domainsUsingProxy。
+#
+# ts.net：Tailscale MagicDNS 的机器名（如 jellyfin.xxxx.ts.net）
+#   在本机系统 DNS 里解析不了（Windows 没启用 MagicDNS），
+#   PAC 走到 dnsResolve 会卡 5 秒以上才失败，然后才回退到代理，
+#   表现为浏览器打开 tailnet 站点要等好几秒。提前命中代理域名即可跳过 DNS 查询。
+ts.net
