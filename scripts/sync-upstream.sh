@@ -21,6 +21,8 @@ GEN_WF=".github/workflows/auto-generate-pac.yml"
 LOCAL_PROXY_DOMAINS="${LOCAL_PROXY_DOMAINS:-local-proxy-domains.txt}"
 # 这些文件允许被上游版本直接覆盖：gfw.pac 是生成产物，生成脚本里的端口由下面重新写回
 RESOLVE_WITH_UPSTREAM="gfw.pac ${GEN_WF} cidrs-cn.txt"
+# 生成时用的临时合并文件，无论成功失败都不要留在工作区（否则会被 git add -A 提交）
+trap 'rm -f .proxy-domains.merged.txt' EXIT
 
 git config user.name >/dev/null 2>&1 || git config user.name "github-actions[bot]"
 git config user.email >/dev/null 2>&1 || git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
